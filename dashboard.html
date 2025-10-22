@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CraftMyCV - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<style>
+ * {
+     margin: 0;
+     padding: 0;
+     box-sizing: border-box;
+     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+ }
+
+
+ body {
+     background-color: #f0f2f5;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     min-height: 100vh;
+     padding: 20px;
+ }
+
+ .container {
+     width: 414px;
+     background-color: white;
+     border-radius: 24px;
+     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+     overflow: hidden;
+     transition: all 0.3s ease;
+ }
+
+ .header {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     padding: 28px 24px;
+     border-bottom: 1px solid #eaeaea;
+ }
+
+.logo {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo svg {
+    fill: #0072be;
+}
+.logo h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-left: 8px;
+    }
+
+ .user-profile {
+     display: flex;
+     align-items: center;
+     gap: 10px;
+ }
+
+ .profile-img {
+     width: 32px;
+     height: 32px;
+     border-radius: 50%;
+     background-color: #0072be;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     color: white;
+     font-weight: bold;
+ }
+
+ .notification {
+     width: 20px;
+     height: 20px;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     color: #666;
+     cursor: pointer;
+ }
+
+ .create-button {
+        width: calc(100% - 40px);
+     margin: 20px;
+     padding: 14px;
+     background: linear-gradient(to right, #4aa7e6, #0072be);
+     border: none;
+     border-radius: 12px;
+     color: white;
+     font-size: 16px;
+     font-weight: 600;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     gap: 10px;
+     cursor: pointer;
+     transition: all 0.3s ease;
+ }
+
+ .create-button:hover {
+     transform: translateY(-2px);
+     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+ }
+
+ .templates-section {
+    margin-top: 20px;
+}
+
+.section-title {
+    margin: 24px 24px 16px;
+    font-weight: 600;
+    font-size: 16px;
+    color: #333;
+}
+
+.document-card.selected {
+    border: 2px solid #037ed1;
+    background-color: #e6f7ff;
+    box-shadow: 0 0 0 2px #8cd0fd;
+    outline: none;
+}
+
+.document-card.selected .document-name {
+    color: #0270b9;
+    font-weight: 600;
+}
+
+.templates-container, .documents-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap:28px;
+    padding: 0 24px;
+}
+
+.document-card {
+    width: calc(48% - 8px);
+    border-radius: 12px;
+    background-color: #f9f9f9;
+    padding: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.document-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.document-preview {
+    width: 100%;
+    height: 100px;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+}
+
+.document-name {
+    margin-top: 10px;
+    font-size: 14px;
+    text-align: center;
+    line-height: 1.4;
+    color: #333;
+    font-weight: 500;
+}
+
+ .document-name {
+     margin-top: 8px;
+     font-size: 14px;
+     text-align: center;
+     line-height: 1.4;
+ }
+
+
+ /* Preview Modal Styles */
+.preview-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.preview-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.preview-content {
+    position: relative;
+    background-color: white;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow: hidden;
+    z-index: 1001;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.preview-header h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.preview-close {
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.2s;
+}
+
+.preview-close:hover {
+    color: #333;
+}
+
+.preview-image-container {
+    padding: 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+
+.preview-image {
+    max-width: 100%;
+    max-height: 60vh;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.preview-actions {
+    display: flex;
+    padding: 20px;
+    gap: 12px;
+}
+
+.preview-action-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.use-btn {
+    background: linear-gradient(to right, #037bcc, #2398be);
+    color: white;
+}
+
+.use-btn:hover {
+    background: #037bcc;
+    transform: translateY(-2px);
+}
+
+.cancel-btn {
+    background-color: #e0e0e0;
+    color: #494949;
+}
+
+.cancel-btn:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-2px);
+}
+
+/* Selected card highlight */
+.document-card.selected {
+    border: 2px solid #66c2ff;
+    background-color: #e6f7ff;
+    box-shadow: 0 0 0 2px #66c2ff;
+}
+
+.document-card.selected .document-name {
+    color: #66c2ff;
+    font-weight: 600;
+}
+ .bottom-nav {
+     display: flex;
+     justify-content: space-around;
+     padding: 16px;
+     border-top: 1px solid #eaeaea;
+     background-color: #f9f9f9;
+     margin-top: 32px;
+ }
+
+ .nav-item {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     gap: 4px;
+     cursor: pointer;
+     color: #646464;
+     font-size: 12px;
+     padding-top: 4px;
+ }
+
+ .nav-item.active {
+     color: #0165a8;
+ }
+
+.active::after {
+    content: "";
+    display: block;
+    width: 6px;
+    height: 6px;
+    background-color: #0165a8;
+    
+    margin-top: 4px;}
+
+
+
+
+ .nav-item i {
+     font-size: 20px;
+ }
+
+ @media (max-width: 375px) {
+     .container {
+         width: 100%;
+     }
+ }
+</style>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div>
+                <svg id="Layer_1" data-name="Layer 1" height="30" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 111.87 122.88"><defs><style>.cls-1{fill-rule:evenodd;}</style></defs><title>edit-file</title><path class="cls-1" d="M56.75,113.57V75.07a9.34,9.34,0,0,1,9.31-9.3h36.5a9.34,9.34,0,0,1,9.31,9.3v38.5a9.34,9.34,0,0,1-9.31,9.31H66.06a9.34,9.34,0,0,1-9.31-9.31Zm2.74-102.1L79.08,29.82H59.49V11.47ZM20.72,69.38a2.12,2.12,0,0,0-2,2.21,2.08,2.08,0,0,0,2,2.21H45.3V69.38Zm0,15.83a2.12,2.12,0,0,0-2,2.21,2.08,2.08,0,0,0,2,2.21H45.3V85.21Zm0-47.5a2.12,2.12,0,0,0-2,2.21,2.09,2.09,0,0,0,2,2.21H43.45a2.13,2.13,0,0,0,2-2.2,2.1,2.1,0,0,0-2-2.22Zm0-15.83a2.12,2.12,0,0,0-2,2.21,2.08,2.08,0,0,0,2,2.21h12.5a2.12,2.12,0,0,0,2-2.21,2.1,2.1,0,0,0-2-2.21Zm0,31.67a2.12,2.12,0,0,0-2,2.21,2.1,2.1,0,0,0,2,2.21H59.16a2.13,2.13,0,0,0,2-2.21,2.09,2.09,0,0,0-2-2.21ZM90,32.45a3.26,3.26,0,0,0-2.37-3.14L58.74,1.2A3.21,3.21,0,0,0,56.23,0H5.87A5.86,5.86,0,0,0,0,5.86V106.25a5.84,5.84,0,0,0,1.72,4.15,5.91,5.91,0,0,0,4.15,1.71H45.39v-6.55H6.55v-99H52.94V33.08a3.29,3.29,0,0,0,3.29,3.29h27.2V57.82H90V32.45ZM82.4,106l-11.58,3.09,1.67-12.43L82.4,106ZM75,93.86l12.36-14a1.06,1.06,0,0,1,.76-.36,1.17,1.17,0,0,1,.52.12l8.83,8a.92.92,0,0,1,.28.64.89.89,0,0,1-.31.71L84.92,103.2,75,93.86Z"/></svg>
+                </div>
+                <h1>CraftMyCV</h1>   
+            </div>
+            <div class="user-profile">
+                <div class="profile-img">
+                    <img src="./avatar.jpg" alt="User Avatar" width="42" height="42">
+                </div>
+                <div class="notification"><i class="fas fa-bell"></i></div>
+            </div>
+        </div>
+
+        <button class="create-button">
+            <i class="fas fa-plus"></i>
+            Create New Resume/Portfolio
+        </button>
+
+        <div class="section-title">Recent Documents</div>
+        <div class="recent-documents">
+            <div class="documents-container">
+                <!-- Recent documents will be generated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="section-title">Templates</div>
+        <div class="templates">
+            <div class="templates-container">
+                <!-- Templates will be generated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-file-alt"></i>
+                <span>Templates</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-folder-open"></i>
+                <span>My Documents</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-lightbulb"></i>
+                <span>Tips</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+       // dashboard.js
+
+// Handle navigation tabs
+const navItems = document.querySelectorAll('.nav-item');
+navItems.forEach(item => {
+    item.addEventListener('click', function () {
+        navItems.forEach(i => i.classList.remove('active'));
+        this.classList.add('active');
+    });
+});
+
+// Handle create new resume/portfolio button
+const createButton = document.querySelector('.create-button');
+createButton.addEventListener('click', function () {
+    alert('Creating new resume/portfolio...');
+});
+
+// Template data with unique preview images
+const templates = [
+    {
+        id: 1,
+        name: "Modern Professional",
+        preview: "./RESUME_1.png"
+    },
+    {
+        id: 2,
+        name: "Creative Designer",
+        preview: "./RESUME_2.png"
+    },
+    {
+        id: 3,
+        name: "Academic CV",
+        preview: "./RESUME_3.png"
+    },
+    {
+        id: 4,
+        name: "Executive",
+        preview: "./RESUME_4.png"
+    }
+];
+
+// Recent documents data
+const recentDocuments = [
+    {
+        id: 1,
+        name: "John Smith - Software Engineer CV",
+        type: "cv",
+        lastEdited: "2023-06-15",
+        preview: "./RESUME-5.png"
+    },
+    {
+        id: 2,
+        name: "Smitha Reddy - Graphic Designer",
+        type: "portfolio",
+        lastEdited: "2023-06-10",
+        preview: "./Resume_6.png"
+    }
+];
+
+// Function to generate template cards
+function generateTemplateCards() {
+    const container = document.querySelector('.templates-container');
+
+    // Clear existing content
+    container.innerHTML = '';
+
+    // Generate cards for each template
+    templates.forEach(template => {
+        const card = document.createElement('div');
+        card.className = 'document-card';
+        card.dataset.templateId = template.id;
+        card.dataset.type = 'template';
+
+        card.innerHTML = `
+            <div class="document-preview" style="background-image: url('${template.preview}')"></div>
+            <p class="document-name">${template.name}</p>
+        `;
+
+        // Add click event to select template
+        card.addEventListener('click', function () {
+            showPreview(template, 'template');
+        });
+
+        container.appendChild(card);
+    });
+}
+
+// Function to generate recent documents
+function generateRecentDocuments() {
+    const container = document.querySelector('.documents-container');
+    
+    // Clear existing content
+    container.innerHTML = '';
+    
+    // Generate cards for each document
+    recentDocuments.forEach(doc => {
+        const card = document.createElement('div');
+        card.className = 'document-card';
+        card.dataset.documentId = doc.id;
+        card.dataset.type = 'document';
+        
+        card.innerHTML = `
+            <div class="document-preview" style="background-image: url('${doc.preview}')"></div>
+            <p class="document-name">${doc.name}</p>
+        `;
+        
+        // Add click event to open document
+        card.addEventListener('click', function() {
+            showPreview(doc, 'document');
+        });
+        
+        container.appendChild(card);
+    });
+}
+
+// Function to show preview modal
+function showPreview(item, type) {
+    // Remove any existing preview modal
+    const existingModal = document.querySelector('.preview-modal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    // Create modal container
+    const modal = document.createElement('div');
+    modal.className = 'preview-modal';
+    
+    // Create modal content
+    modal.innerHTML = `
+        <div class="preview-overlay"></div>
+        <div class="preview-content">
+            <div class="preview-header">
+                <h3>${item.name}</h3>
+                <span class="preview-close">&times;</span>
+            </div>
+            <div class="preview-image-container">
+                <img src="${item.preview}" alt="${item.name}" class="preview-image">
+            </div>
+            <div class="preview-actions">
+                <button class="preview-action-btn use-btn">${type === 'template' ? 'Use Template' : 'Open Document'}</button>
+                <button class="preview-action-btn cancel-btn">Cancel</button>
+            </div>
+        </div>
+    `;
+    
+    // Add modal to body
+    document.body.appendChild(modal);
+    
+    // Add event listeners
+    const closeBtn = modal.querySelector('.preview-close');
+    const overlay = modal.querySelector('.preview-overlay');
+    const useBtn = modal.querySelector('.use-btn');
+    const cancelBtn = modal.querySelector('.cancel-btn');
+    
+    const closeModal = () => {
+        modal.remove();
+    };
+    
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeModal);
+    
+    useBtn.addEventListener('click', () => {
+        if (type === 'template') {
+            alert(`Using template: ${item.name}`);
+            // Redirect to editor with template
+            // window.location.href = `editor.html?template=${item.id}`;
+        } else {
+            alert(`Opening document: ${item.name}`);
+            // Redirect to editor with document
+            // window.location.href = `editor.html?document=${item.id}`;
+        }
+        closeModal();
+    });
+    
+    // Highlight selected card
+    document.querySelectorAll('.document-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    const selector = type === 'template' 
+        ? `.document-card[data-template-id="${item.id}"]` 
+        : `.document-card[data-document-id="${item.id}"]`;
+    
+    const selectedCard = document.querySelector(selector);
+    if (selectedCard) {
+        selectedCard.classList.add('selected');
+    }
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    generateTemplateCards();
+    generateRecentDocuments();
+}); 
+    </script>
+        
+    
+</body>
+
+</html>
